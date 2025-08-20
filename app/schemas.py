@@ -43,6 +43,13 @@ class ClassroomModel(ClassroomPostModel):
         return None
 
 
+# nate's model addition for a clean response from the new endpoint
+class ClassroomStudentsModel(BaseModel):
+    classroom_id: int
+    classroom_name: str
+    students: List[dict] # list of {name, email}
+
+
 class ClassroomUpdateModel(BaseModel):
     name: Optional[str] = None
     user_accounts: Optional[List[int]] = None
