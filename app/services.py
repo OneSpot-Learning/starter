@@ -139,6 +139,37 @@ class ClassroomService(BaseService):
                 raise ServiceException(f"Failed to delete {classroom.name}")
 
         return None
+    
+
+    # nate's method to retrieve classroom(s) & student's names
+    def get_classroom_name_with_students(self, name: str) -> List[dict]:
+        # 'stmt' label to keep in line with codebase naming prefs
+        stmt = select(Classroom).where(Classroom.name == name)
+
+        # query our SQLAlchemy db for available classrooms
+        classrooms = self.database.scalars(stmt).all()
+
+        results = []
+
+        # not exactly the most performant of solutions, O(n^2), but since
+        # the dataset isn't in the thousands, i thought it sufficient
+        for classroom in classrooms:
+            # use a list comprehension to contain all available students
+            # and ensure they are, indeed, a student
+            students = [
+                {"name": student.name, "email": student.email}
+                for student in classroom.user_accounts
+                if student.is_student
+            ]
+            results.append( # plop it into results if all checks out
+                {
+                    "classroom_id": classroom.id,
+                    "classroom_name": classroom.name,
+                    "students": students,
+                }
+            )
+        
+        return results
 
 
 class UserAccountService(BaseService):
