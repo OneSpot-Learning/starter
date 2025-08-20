@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/static/style.css" />
+    <title>Classroom Viewer</title>
+  </head>
+  <body>
+    <h1>Classroom Viewer</h1>
+    <p>Enter a classroom name to see its associated students:</p>
+
+    <form id="classroomForm">
+      <input id="classroomName" type="text" placeholder="e.g. Classroom One" />
+      <button type="submit">Search</button>
+    </form>
+
+    <button onclick="funnyMessage()" class="funny">
+      Click me for a Secret Message
+    </button>
+
+    <div id="results"></div>
+    <script src="/static/main.js"></script>
+  </body>
+</html>
