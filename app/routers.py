@@ -79,17 +79,6 @@ async def get_school(
         raise HTTPException(status_code=404, detail="Not found.")
 
 
-@classroom_router.get("/{id}")
-async def get_classroom(
-    id: int, service: ClassroomService = Depends(ServiceDependency("ClassroomService"))
-) -> ClassroomModel:
-    result = await asyncio.to_thread(service.get, id)
-    if result:
-        return result
-    else:
-        raise HTTPException(status_code=404, detail="Not found.")
-
-
 # nate's classroom GET request, including response_model
 # param for OpenAPI documentation via FastAPI
 @classroom_router.get("/by-name", response_model=List[ClassroomStudentsModel])
@@ -105,6 +94,17 @@ async def get_classroom_by_name(
         # handle invalid/missing classroom
         raise HTTPException(status_code=404, detail="Classroom not found.")
     return results
+
+
+@classroom_router.get("/{id}")
+async def get_classroom(
+    id: int, service: ClassroomService = Depends(ServiceDependency("ClassroomService"))
+) -> ClassroomModel:
+    result = await asyncio.to_thread(service.get, id)
+    if result:
+        return result
+    else:
+        raise HTTPException(status_code=404, detail="Not found.")
 
 
 @user_router.get("/{id}")
