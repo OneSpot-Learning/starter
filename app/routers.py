@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from app.exceptions import ServiceException
 from app.schemas import (
     ClassroomModel,
+    ClassroomStudentsModel, # nate's model
     ClassroomPostModel,
     ClassroomUpdateModel,
     SchoolModel,
@@ -87,6 +88,23 @@ async def get_classroom(
         return result
     else:
         raise HTTPException(status_code=404, detail="Not found.")
+
+
+# nate's classroom GET request, including response_model
+# param for OpenAPI documentation via FastAPI
+@classroom_router.get("/by-name", response_model=List[ClassroomStudentsModel])
+async def get_classroom_by_name(
+    name: str,
+    # use FastAPI's dependency injection to insert ClassroomService
+    service: ClassroomService = Depends(ServiceDependency("ClassroomService")),
+):
+    # use asyncio to run a separate, non-blocking thread
+    # for my function to access classroom and students
+    results = await asyncio.to_thread(service.get_classroom_name_with_students, name)
+    if not results: 
+        # handle invalid/missing classroom
+        raise HTTPException(status_code=404, detail="Classroom not found.")
+    return results
 
 
 @user_router.get("/{id}")
