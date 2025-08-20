@@ -7,6 +7,7 @@ from app.routers import classroom_router, school_router, user_router
 
 Base.metadata.create_all(bind=engine)
 
+# call folder.file:variable (app.app:app --reload) to run test server
 app = FastAPI()
 
 app.add_middleware(
